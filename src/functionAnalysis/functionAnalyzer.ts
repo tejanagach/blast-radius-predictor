@@ -30,9 +30,23 @@ export function buildFunctionGraph(projectPath: string) {
 
       for (const call of calls) {
 
-        const expression = call.getExpression().getText()
+        const expression = call.getExpression()
+        graph[key].push(expression.getText())
 
-        graph[key].push(expression)
+        // Also record the source file of the called function to help with cross-file impact analysis
+        try {
+          const symbol = expression.getSymbol() || expression.getType().getSymbol()
+          if (symbol) {
+            const aliased = symbol.getAliasedSymbol()
+            const actualSymbol = aliased || symbol
+            const declarations = actualSymbol.getDeclarations()
+            for (const decl of declarations) {
+              graph[key].push(decl.getSourceFile().getBaseName())
+            }
+          }
+        } catch (e) {
+          // Symbol resolution might fail if types are not fully loaded
+        }
 
       }
 

@@ -17,9 +17,12 @@ async function main() {
   const repo = parts[1] ?? "react"
   const prNumber = Number(process.env.PR_NUMBER || 27000)
 
-  const diff = await getPullRequestDiff(owner, repo, prNumber)
- 
-  const changedFiles = extractChangedFiles(diff).map(f => path.resolve(process.cwd(), f))
+  // Quick Local Test (Simulate change in paymentService.ts)
+  const changedFiles = [
+    path.join(process.cwd(), "src/paymentService.ts")
+  ]
+  // const diff = await getPullRequestDiff(owner, repo, prNumber)
+  // const changedFiles = extractChangedFiles(diff).map(f => path.resolve(process.cwd(), f))
   console.log("Changed Files:")
   console.log(changedFiles)
 
@@ -39,7 +42,7 @@ async function main() {
   changedFiles,
   process.cwd()
 )
-  const report = generateReport(changedFiles, impacted, risk.level,impactedTests)
+  const report = generateReport(changedFiles, impacted, impactedFunctions, risk.level, impactedTests)
 
   console.log("\nImpacted Tests:")
   console.log(impactedTests)

@@ -1,6 +1,7 @@
 export function generateReport(
   changedFiles: string[],
   impactedFiles: string[],
+  impactedFunctions: string[],
   riskLevel: string,
   impactedTests: string[]
 ) {
@@ -13,6 +14,9 @@ ${changedFiles.map(f => `- ${f}`).join("\n")}
 
 ### Impacted Files
 ${impactedFiles.length ? impactedFiles.map(f => `- ${f}`).join("\n") : "None"}
+
+### Impacted Functions
+${impactedFunctions.length ? impactedFunctions.map(f => `- ${f}`).join("\n") : "None"}
 
 ### Impacted Tests
 ${impactedTests.length ? impactedTests.map(t => `- ${t}`).join("\n") : "None"}
