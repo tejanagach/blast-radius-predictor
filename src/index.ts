@@ -15,14 +15,17 @@ async function main() {
   const parts = repoFull.split("/")
   const owner = parts[0] ?? "facebook"
   const repo = parts[1] ?? "react"
-  const prNumber = Number(process.env.PR_NUMBER || 27000)
+  const prNumber = Number(process.env.PR_NUMBER)
+  let changedFiles: string[] = []
 
-  // Quick Local Test (Simulate change in paymentService.ts)
-  const changedFiles = [
-    path.join(process.cwd(), "src/paymentService.ts")
-  ]
-  // const diff = await getPullRequestDiff(owner, repo, prNumber)
-  // const changedFiles = extractChangedFiles(diff).map(f => path.resolve(process.cwd(), f))
+  if (process.env.LOCAL_TEST === 'true' || isNaN(prNumber)) {
+    console.log("--- Running in Local Test Mode ---")
+    changedFiles = [path.join(process.cwd(), "src/paymentService.ts")]
+  } else {
+    const diff = await getPullRequestDiff(owner, repo, prNumber)
+    changedFiles = extractChangedFiles(diff).map(f => path.resolve(process.cwd(), f))
+  }
+
   console.log("Changed Files:")
   console.log(changedFiles)
 
