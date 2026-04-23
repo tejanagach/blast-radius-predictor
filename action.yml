@@ -1,0 +1,33 @@
+name: "Blast Radius Predictor Engine"
+description: "An intelligent PR gatekeeper that predicts, explains, and prevents risky code changes before merge."
+author: "Teja"
+
+branding:
+  icon: "shield"
+  color: "red"
+
+inputs:
+  github_token:
+    description: "GitHub token for PR commenting and labeling"
+    required: true
+    default: ${{ github.token }}
+
+runs:
+  using: "composite"
+  steps:
+    - name: Setup Node
+      uses: actions/setup-node@v4
+      with:
+        node-version: 20
+
+    - name: Install Dependencies
+      run: npm install
+      shell: bash
+
+    - name: Run Engine
+      run: npx ts-node src/index.ts
+      shell: bash
+      env:
+        GITHUB_TOKEN: ${{ inputs.github_token }}
+        PR_NUMBER: ${{ github.event.pull_request.number }}
+        REPO: ${{ github.repository }}

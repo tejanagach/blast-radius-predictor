@@ -41,7 +41,10 @@ export function buildFunctionGraph(projectPath: string) {
             const actualSymbol = aliased || symbol
             const declarations = actualSymbol.getDeclarations()
             for (const decl of declarations) {
-              graph[key].push(decl.getSourceFile().getBaseName())
+              const sourceFile = decl.getSourceFile();
+              if (!sourceFile.getFilePath().includes("node_modules") && !sourceFile.getFilePath().includes("lib.") && !sourceFile.getFilePath().includes("@types")) {
+                graph[key].push(sourceFile.getBaseName());
+              }
             }
           }
         } catch (e) {

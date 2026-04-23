@@ -1,0 +1,16 @@
+{
+  "criticalPaths": [
+    "src/payment",
+    "src/auth"
+  ],
+  "riskThresholds": {
+    "high": 75,
+    "medium": 40
+  },
+  "weights": {
+    "files": 2,
+    "functions": 1,
+    "criticalPathMultiplier": 2.0,
+    "dependencyDepth": 1.5
+  }
+}
